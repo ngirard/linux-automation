@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Switch on/off the mute state of the Master volume
+#
+# Dependency:
+# - amixer (sudo apt -y install alsa-utils)
+
+amixer -D pulse set Master toggle
