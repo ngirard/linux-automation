@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Switch the Master volume level between 40% and 100%
+#
+# Dependency:
+# - amixer (sudo apt -y install alsa-utils)
+
+current_level=$(amixer -D pulse get Master | awk -F 'Left:|[][]' 'BEGIN {RS=""}{ print $3 }')
+if [ "${current_level}" = "40%" ]; then
+  level='100%'
+else
+  level='40%'
+fi
+#notify-send -u low -a "Bitfocus Companion" "Level: [${current_level}] -> [${level}]
+amixer -D pulse set Master "${level}"
+# Or:
+# pactl set-sink-volume @DEFAULT_SINK@ "${level}"

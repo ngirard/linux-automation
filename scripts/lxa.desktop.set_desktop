@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Set the current desktop according to the given desktop number.
+#
+# Dependency
+# - qdbus (sudo apt -y install qtchooser)
+
+qdbus org.kde.KWin /KWin setCurrentDesktop $1
