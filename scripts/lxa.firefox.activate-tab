@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# Activate the tab matching the given pattern.
+#
+# Dependency:
+# - brotab (https://github.com/balta2ar/brotab)
+# - xdotool (sudo apt -y install xdotool)
+
+log() {
+  echo "$@" >&2
+}
+
+if [ "$#" -ne 1 ]; then
+  exit 1
+fi
+
+tab_pattern="$1"
+
+# Search the first tab matching the given pattern using brotab.
+tab_id=$(brotab list | grep -E "$tab_pattern" | cut -f1 | head -n1)
+#log "tab_id: $tab_id"
+
+# Exit if no tab was found.
+if [ -z "$tab_id" ]; then
+  exit 1
+fi
+
+# Activate the tab.
+brotab activate "$tab_id"
+
+# Raise the corresponding window.
+window_id=$(xdotool search --name "$tab_pattern.+ — Mozilla Firefox"| head -n1)
+xdotool windowactivate "$window_id"
