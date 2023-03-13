@@ -1,0 +1,4 @@
+#!/bin/sh
+
+qdbus org.kde.ksmserver /KSMServer saveCurrentSession
+
