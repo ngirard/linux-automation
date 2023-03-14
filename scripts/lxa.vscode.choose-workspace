@@ -8,7 +8,7 @@
 # - wmctrl (sudo apt -y install wmctrl)
 
 fsearch --new-window --search="vs:" &
-sleep .1
+sleep .2
 
 # Get the window ID of the fsearch window
 window_id=$(wmctrl -l | grep FSearch| sort | tail -1 | grep -Eo '0x[0-9a-f]+')
