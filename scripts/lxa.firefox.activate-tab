@@ -2,12 +2,12 @@
 
 # Activate the tab matching the given pattern.
 #
-# Dependency:
+# Dependencies:
 # - brotab (https://github.com/balta2ar/brotab)
 # - xdotool (sudo apt -y install xdotool)
 
 log() {
-  echo "$@" >&2
+  printf '%s\n' "$*" >&2
 }
 
 if [ "$#" -ne 1 ]; then
@@ -22,12 +22,16 @@ tab_id=$(brotab list | grep -E "$tab_pattern" | cut -f1 | head -n1)
 
 # Exit if no tab was found.
 if [ -z "$tab_id" ]; then
+  log "No tab matching '$tab_pattern' was found."
   exit 1
 fi
 
 # Activate the tab.
-brotab activate "$tab_id"
+if ! brotab activate "$tab_id"; then
+  log "Failed to activate tab '$tab_id'."
+  exit 1
+fi
 
 # Raise the corresponding window.
-window_id=$(xdotool search --name "$tab_pattern.+ — Mozilla Firefox"| head -n1)
-xdotool windowactivate "$window_id"
+pattern="$tab_pattern.* — Mozilla Firefox"
+lxa.window.raise "$pattern"
