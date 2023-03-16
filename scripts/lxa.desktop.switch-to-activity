@@ -1,0 +1,40 @@
+#!/bin/sh
+
+# Switch to the activity with the given name.
+
+log() {
+  echo "$@" >&2
+}
+
+if [ "$#" -ne 1 ]; then
+  exit 1
+fi
+
+activity_name="$1"
+
+# Get the list of all activities with their information.
+list_activities(){
+  qdbus --literal org.kde.ActivityManager /ActivityManager/Activities org.kde.ActivityManager.Activities.ListActivitiesWithInformation | 
+    sed 's/], \[/\n/g'
+}
+
+search_activity(){
+  activity_name="$1"
+  list_activities | while read -r line; do
+    if printf '%s' "$line" | grep -q "$activity_name"; then
+      printf '%s' "$line" | cut -d'"' -f2
+      break
+    fi
+  done
+}
+
+activity_id=$(search_activity "$activity_name")
+
+# Exit if the activity was not found.
+if [ -z "$activity_id" ]; then
+  log "No activity with name '$activity_name' was found."
+  exit 1
+fi
+
+# Switch to the activity.
+qdbus org.kde.ActivityManager /ActivityManager/Activities org.kde.ActivityManager.Activities.SetCurrentActivity "$activity_id"
