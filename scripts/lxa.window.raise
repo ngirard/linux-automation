@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# Raise the window whose name matches the given regex
+#
+# Dependencies:
+# - xdotool (sudo apt -y install xdotool)
+
+log() {
+  printf '%s\n' "$*" >&2
+}
+
+pattern="$1"
+
+if [ -z "$pattern" ]; then
+  log "No pattern was given."
+  exit 1
+fi
+
+if ! window_id=$(xdotool search --name "$pattern"| head -n1); then
+  log "Failed to search window corresponding to pattern '$pattern'."
+  exit 1
+fi
+if [ -z "$window_id" ]; then
+  log "No window corresponding to pattern '$pattern' was found."
+  exit 1
+fi
+
+xdotool windowactivate "$window_id"
