@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Browse the given path in Eagle Mode.
+#
+# Dependencies:
+# - Eagle Mode (https://sourceforge.net/projects/eaglemode)
+# - xclip (sudo apt -y install xclip)
+
+path="$1"
+# If the path is not given via the command line, grab it from the clipboard.
+if [ -z "$path" ]; then
+  path=$(xclip -o)
+fi
+
+# Exit if the path is not given.
+if [ -z "$path" ]; then
+  printf 'No path was given.\n' >&2
+  exit 1
+fi
+
+eaglemode -visit "::FS::$(printf '%s' "${path}"|sed "s/\//::/g")"
